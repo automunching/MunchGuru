@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import OpenAI
-from rag.retriever import build_vector_store, retrieve_relevant_food
+from rag.retriever import build_vector_store, retrieve_relevant_food, VECTOR_STORE
 
 load_dotenv()
 
@@ -83,3 +83,8 @@ def chat(req: ChatRequest):
         sessions[session_id] = history[-20:]
 
     return {"reply": reply}
+
+@app.post("/rebuild")
+def rebuild():
+    build_vector_store()
+    return {"status": "Vector store rebuilt", "items": len(VECTOR_STORE)}
