@@ -31,10 +31,8 @@ def create_embedding(text: str) -> list:
 
 
 def _build_document_text(item: dict, restaurant: dict) -> str:
-    """
-    Compose the text chunk that gets embedded for one menu item.
-    Only customer-relevant fields are included.
-    """
+    radius = restaurant.get("serviceRadius", "Not specified")
+    radius_text = f"{radius} meters" if isinstance(radius, (int, float)) else str(radius)
     return (
         f"Food Name: {item.get('name', '')}\n"
         f"Category: {item.get('category', '')}\n"
@@ -44,6 +42,7 @@ def _build_document_text(item: dict, restaurant: dict) -> str:
         f"Restaurant: {restaurant.get('restaurantName', 'Unknown')}\n"
         f"Branch: {restaurant.get('branch', '')}\n"
         f"Address: {restaurant.get('address', '')}\n"
+        f"Service Radius: {radius_text}\n"
         f"Open Now: {'Yes' if restaurant.get('isOpen') else 'No'}"
     )
 
@@ -127,11 +126,12 @@ def upsert_menu_item(item: dict):
         "text":      text,
         "embedding": embedding,
         "meta": {
-            "name":           item.get("name"),
-            "price":          item.get("price"),
-            "restaurantName": restaurant.get("restaurantName"),
-            "branch":         restaurant.get("branch"),
-        }
+    "name":            item.get("name"),
+    "price":           item.get("price"),
+    "restaurantName":  restaurant.get("restaurantName"),
+    "branch":          restaurant.get("branch"),
+    "serviceRadius":   restaurant.get("serviceRadius"),   # ADD THIS
+}
     })
     print(f"✅ Upserted item: {item.get('name')} ({item['id']})")
 

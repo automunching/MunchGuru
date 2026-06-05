@@ -16,6 +16,8 @@ def get_all_restaurants():
             "branch":         data.get("branch", ""),
             "address":        data.get("address", ""),
             "isOpen":         data.get("isOpen", False),
+            "serviceRadius":  data.get("serviceRadius", False),
+            
         })
     return result
 
